@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const DEFAULT_DATA = { id: 2, notes: "" };
+const DEFAULT_DATA = { notes: "" };
 
 export const NotesForm = ({ onSubmit, onCancel, dataInit = DEFAULT_DATA }) => {
   const [form, setForm] = useState(dataInit);

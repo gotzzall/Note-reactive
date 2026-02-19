@@ -1,34 +1,39 @@
-import notes from "../db/notes";
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function RandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const  NOTE_URL = "http://localhost:5287"
 
 export const notesService = {
   getNotes: async () => {
-    await sleep(RandomInt(1000, 3000));
-    return notes;
+    const response = await fetch(`${NOTE_URL}/noteitems`);
+    const data = await response.json();
+    return data;
   },
   addNote: async (note) => {
-    await sleep(RandomInt(1000, 3000));
-    const newNote = {...note, id: crypto.randomUUID()}
-    notes.push(newNote);
-    return newNote;
+    const response = await fetch(`${NOTE_URL}/noteitems`,{
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(note)
+    });
+
+    const data = await response.json();
+    return data;
   },
   deleteNote: async (id) => {
-    await sleep(RandomInt(1000, 3000));
-    const index = notes.findIndex(item => item.id == id);
-    notes.splice(index, 1);
+    await fetch(`${NOTE_URL}/noteitems/${id}`, {
+      method: "DELETE"
+    })
+
     return id;
   },
   updateNote: async (note) => {
-    await sleep(RandomInt(1000, 3000));
-    const index = notes.findIndex(item => item.id == note.id);
-    notes[index] = note;
+    await fetch(`${NOTE_URL}/noteitems/${note.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(note)
+    })
+
     return note;
   }
 } 

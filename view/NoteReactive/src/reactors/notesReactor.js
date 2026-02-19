@@ -18,6 +18,6 @@ export const notesReactor = {
     }
   },
   onError: ({action, error, params, db}) => {
-    
+    console.log(action, error)
   }
 }
