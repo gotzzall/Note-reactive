@@ -678,11 +678,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/mrgos/Documentos/Programacion/DotNet/NoteApi/NoteApi.csproj",
+      "projectUniqueName": "/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/NoteApi.csproj",
       "projectName": "NoteApi",
-      "projectPath": "/home/mrgos/Documentos/Programacion/DotNet/NoteApi/NoteApi.csproj",
+      "projectPath": "/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/NoteApi.csproj",
       "packagesPath": "/home/mrgos/.nuget/packages/",
-      "outputPath": "/home/mrgos/Documentos/Programacion/DotNet/NoteApi/obj/",
+      "outputPath": "/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/mrgos/.nuget/NuGet/NuGet.Config"
@@ -748,7 +748,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

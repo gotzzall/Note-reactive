@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "eTxN3e6Tufk=",
+  "dgSpecHash": "gi+izKy+Xd4=",
   "success": true,
-  "projectFilePath": "/home/mrgos/Documentos/Programacion/DotNet/NoteApi/NoteApi.csproj",
+  "projectFilePath": "/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/NoteApi.csproj",
   "expectedPackageFiles": [
     "/home/mrgos/.nuget/packages/microsoft.aspnetcore.diagnostics.entityframeworkcore/10.0.3/microsoft.aspnetcore.diagnostics.entityframeworkcore.10.0.3.nupkg.sha512",
     "/home/mrgos/.nuget/packages/microsoft.entityframeworkcore/10.0.3/microsoft.entityframeworkcore.10.0.3.nupkg.sha512",
