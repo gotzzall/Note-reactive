@@ -97,3 +97,16 @@
 /home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/obj/Debug/net10.0/NoteApi.pdb
 /home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/obj/Debug/net10.0/NoteApi.genruntimeconfig.cache
 /home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/obj/Debug/net10.0/ref/NoteApi.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Microsoft.AspNetCore.OpenApi.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Microsoft.IdentityModel.Abstractions.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Microsoft.IdentityModel.Logging.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Microsoft.IdentityModel.Protocols.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Microsoft.IdentityModel.Tokens.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Microsoft.OpenApi.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Swashbuckle.AspNetCore.Swagger.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/home/mrgos/Documentos/Programacion/ReactJs/note-reactive/api/NoteApi/bin/Debug/net10.0/System.IdentityModel.Tokens.Jwt.dll

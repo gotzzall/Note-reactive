@@ -1,4 +1,8 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using NoteApi.Models;
 using NoteApi.Repositories;
 
@@ -19,7 +23,10 @@ builder.Services.AddOpenApiDocument(config =>
   config.Title = "TodoAPI v1";
   config.Version = "v1";
 });
+
 var app = builder.Build();
+
+
 if (app.Environment.IsDevelopment())
 {
   app.UseOpenApi();
@@ -73,5 +80,8 @@ app.MapDelete("/noteitems/{id}", async (int id, NoteDb db) =>
 
   return Results.NotFound();
 });
+// .RequireAuthorization();
 app.UseCors("AllowAll");
+
+
 app.Run();
