@@ -3,6 +3,7 @@ import express, { json } from 'express';
 import authRouter from './routes/auth.js';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express'
+import profilesRouter from './routes/profiles.js';
 
 const options = {
   definition: {
@@ -39,6 +40,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
 app.use(express.json());
 
 app.use('/api/auth', authRouter);
+
+app.use("/api/profile", profilesRouter);
 
 
 const PORT = process.env.PORT || 5000;

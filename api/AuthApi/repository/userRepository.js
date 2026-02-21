@@ -9,6 +9,11 @@ const userRespository = {
       SELECT * FROM users WHERE email = ?  
     `).get(email.toLowerCase());
   },
+  getOneUserById: async ({id}) => {
+    return db.prepare(`
+      SELECT * FROM users WHERE id = ?  
+    `).get(id);
+  },
   addUser: async ({id, username, email, password}) => {
     const statement = db.prepare(`
       INSERT INTO users (id, username, email, password) 

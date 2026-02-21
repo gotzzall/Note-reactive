@@ -95,34 +95,34 @@ authRouter.post('/login', async(req, res) => {
 });
 
 
-/**
- * @swagger
- * /api/auth/validate:
- *   get:
- *     summary: Verificar si el token es válido
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Verifica si el el token del usuario es válido
- */
-authRouter.get('/validate', async(req, res) => {
-  const authHeader = req.headers.authorization || "";
-  const [schema, token] = authHeader.split(" ");
+// /**
+//  * @swagger
+//  * /api/auth/validate:
+//  *   get:
+//  *     summary: Verificar si el token es válido
+//  *     security:
+//  *       - bearerAuth: []
+//  *     responses:
+//  *       200:
+//  *         description: Verifica si el el token del usuario es válido
+//  */
+// authRouter.get('/validate', async(req, res) => {
+//   const authHeader = req.headers.authorization || "";
+//   const [schema, token] = authHeader.split(" ");
 
-  if(schema !== 'Bearer' || !token) return res.status(401).json({isSuccess: false, message: "Missing or invalid Authorization header", result: ""});
+//   if(schema !== 'Bearer' || !token) return res.status(401).json({isSuccess: false, message: "Missing or invalid Authorization header", result: ""});
 
-  try{
-    const decoder = jwt.verify(token, process.env.JWT_SECRET);
-    res.json({isSuccess: true, message: "the JWT is valid", result: decoder.payload});
-  }catch(err){
-    if(err.username == "TokenExpiredError") return res.status(401).json({isSuccess: false, message: "Access token expired", result: ""});
-    return res.status(401).json({isSuccess: false, message: "Invalid token", result: ""});
-  }
-})
+//   try{
+//     const decoder = jwt.verify(token, process.env.JWT_SECRET);
+//     res.json({isSuccess: true, message: "the JWT is valid", result: decoder.payload});
+//   }catch(err){
+//     if(err.username == "TokenExpiredError") return res.status(401).json({isSuccess: false, message: "Access token expired", result: ""});
+//     return res.status(401).json({isSuccess: false, message: "Invalid token", result: ""});
+//   }
+// })
 
-authRouter.get("/test", (req, res) => {
-  return res.sendStatus(200).send("test ok");
-})
+// authRouter.get("/test", (req, res) => {
+//   return res.sendStatus(200).send("test ok");
+// })
 
 export default authRouter
