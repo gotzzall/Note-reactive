@@ -1,9 +1,10 @@
-import 'dotenv/config';
-import express, { json } from 'express';
-import authRouter from './routes/auth.js';
-import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express'
-import profilesRouter from './routes/profiles.js';
+import "dotenv/config";
+import express, { json } from "express";
+import authRouter from "./routes/auth.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import profilesRouter from "./routes/profiles.js";
+import cookieParser from "cookie-parser";
 
 const options = {
   definition: {
@@ -30,19 +31,19 @@ const options = {
   apis: ["./routes/*.js"],
 };
 
-
 const app = express();
+
+app.use(cookieParser());
 
 const specs = swaggerJSDoc(options);
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use(express.json());
 
-app.use('/api/auth', authRouter);
+app.use("/api/auth", authRouter);
 
 app.use("/api/profile", profilesRouter);
-
 
 const PORT = process.env.PORT || 5000;
 
