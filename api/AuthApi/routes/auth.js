@@ -3,126 +3,167 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import userRespository from "../repository/userRepository.js";
 import jwtGenerator from "../tools/jwtGenerator.js";
+import {
+  createJti,
+  signAccessToken,
+  signRefreshToken,
+  persistRefreshToken,
+  setRefreshCookie,
+  hashToken,
+  rotateRefreshToken,
+} from "../utils/tokens.js";
+import jwtRepository from "../repository/jwtRepository.js";
+
+import responseGenerator from "../tools/responseGenerator.js";
 
 const authRouter = express.Router();
 
+authRouter.post("/register", async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
 
-/**
- * @swagger
- * /api/auth/register:
- *   post:
- *     summary: Crea un usuario
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       200:
- *         description: Usuario creado y logueado
- */
-
-authRouter.post('/register', async(req, res) => {
-  try{
-    const {username, email, password} = req.body;
-
-    const existingUser = await userRespository.getOneUserByEmail({email});
-    console.log(existingUser)
-    if(existingUser) return res.status(400).json({isSuccess: false, message: "User already exist", result: ""});
+    const existingUser = await userRespository.getOneUserByEmail({ email });
+    console.log(existingUser);
+    if (existingUser)
+      return res
+        .status(400)
+        .json({ isSuccess: false, message: "User already exist", result: "" });
 
     const hasedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await userRespository.addUser({id: crypto.randomUUID(), username, email, password: hasedPassword});
+    const newUser = await userRespository.addUser({
+      id: crypto.randomUUID(),
+      username,
+      email,
+      password: hasedPassword,
+    });
 
-    if(!newUser.lastInsertRowid) return res.status(400).json({isSuccess: false, message: "The user can not be registered", result: ""});
-    
-    const userRegistered = await userRespository.getOneUserByEmail({email});
+    if (!newUser.lastInsertRowid)
+      return res.status(400).json({
+        isSuccess: false,
+        message: "The user can not be registered",
+        result: "",
+      });
 
-    const jwt = jwtGenerator.generate({id: userRegistered, email: email});
-
-    return res.json({isSuccess: true, message: "", result: jwt});
-  }catch(err){
-    console.log(err)
-    res.status(500).json({ message: 'Server error' });
+    return res.json(
+      responseGenerator.generate({
+        isSuccess: true,
+        message: "User created successfully",
+      }),
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
+authRouter.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-/**
- * @swagger
- * /api/auth/login:
- *   post:
- *     summary: Loguearse con un usuario
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       200:
- *         description: Usuario logueado
- */
-authRouter.post('/login', async(req, res) => {
-  try{
-    const {email, password} = req.body;
-
-    const user = await userRespository.getOneUserByEmail({email});
-    if(!user) return res.status(400).json({isSuccess: false, message: "Invalid credentials1", result: ""});
+    const user = await userRespository.getOneUserByEmail({ email });
+    if (!user)
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Invalid credentials1",
+        result: "",
+      });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if(!isMatch) return res.status(400).json({isSuccess: false, message: "Invalid credentials", result: ""});
+    if (!isMatch)
+      return res
+        .status(400)
+        .json({ isSuccess: false, message: "Invalid credentials", result: "" });
 
-    const jwt = jwtGenerator.generate({id: user.id, email: user.email});
+    const accessToken = signAccessToken(user);
 
-    return res.json({isSuccess: true, message: "", result: jwt});
-  }catch(err){
-    res.status(500).json({ message: 'Server error' });
+    const jti = createJti();
+
+    const refreshToken = signRefreshToken(user, jti);
+
+    await persistRefreshToken({
+      user,
+      refreshToken,
+      jti,
+      ip: req.ip,
+      userAgent: req.headers["user-agent"] || "",
+    });
+
+    setRefreshCookie(res, refreshToken);
+
+    return res.json(
+      responseGenerator.generate({
+        isSuccess: true,
+        result: accessToken,
+      }),
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
+authRouter.post("/refresh", async (req, res) => {
+  try {
+    const token = req.cookies?.refresh_token;
+    if (!token) return res.status(401).json({ message: "No refresh token" });
 
-// /**
-//  * @swagger
-//  * /api/auth/validate:
-//  *   get:
-//  *     summary: Verificar si el token es válido
-//  *     security:
-//  *       - bearerAuth: []
-//  *     responses:
-//  *       200:
-//  *         description: Verifica si el el token del usuario es válido
-//  */
-// authRouter.get('/validate', async(req, res) => {
-//   const authHeader = req.headers.authorization || "";
-//   const [schema, token] = authHeader.split(" ");
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+    } catch (err) {
+      return res
+        .status(401)
+        .json({ message: "Invalid or expired refresh token" });
+    }
 
-//   if(schema !== 'Bearer' || !token) return res.status(401).json({isSuccess: false, message: "Missing or invalid Authorization header", result: ""});
+    const tokenHash = hashToken(token);
+    const refreshTokenFinded = await jwtRepository.findOneJwt({
+      tokenHash,
+      jti: decoded.jti,
+    });
 
-//   try{
-//     const decoder = jwt.verify(token, process.env.JWT_SECRET);
-//     res.json({isSuccess: true, message: "the JWT is valid", result: decoder.payload});
-//   }catch(err){
-//     if(err.username == "TokenExpiredError") return res.status(401).json({isSuccess: false, message: "Access token expired", result: ""});
-//     return res.status(401).json({isSuccess: false, message: "Invalid token", result: ""});
-//   }
-// })
+    const tokensUser = await userRespository.getOneUserById({
+      id: refreshTokenFinded.userId,
+    });
 
-// authRouter.get("/test", (req, res) => {
-//   return res.sendStatus(200).send("test ok");
-// })
+    const doc = {
+      user: {
+        id: tokensUser.id,
+        username: tokensUser.username,
+        email: tokensUser.email,
+      },
+      tokenHash: refreshTokenFinded.tokenHash,
+      jti: refreshTokenFinded.jti,
+      expiresAt: refreshTokenFinded.expiresAt,
+      revokedAt: refreshTokenFinded.revokedAt,
+      replacedBy: refreshTokenFinded.replaceBy,
+      createAt: refreshTokenFinded.createAt,
+      ip: refreshTokenFinded.ip,
+      userAgent: refreshTokenFinded.userAgent,
+    };
 
-export default authRouter
+    if (!doc) {
+      return res.status(401).json({ message: "Refresh token not recognized" });
+    }
+    if (doc.revokedAt) {
+      return res.status(401).json({ message: "Refresh token revoked" });
+    }
+    if (doc.expiresAt < new Date()) {
+      return res.status(401).json({ message: "Refresh token expired" });
+    }
+
+    const result = await rotateRefreshToken(doc, doc.user, req, res);
+    return res.json(
+      responseGenerator.generate({
+        isSuccess: true,
+        result: result.accessToken,
+      }),
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+export default authRouter;

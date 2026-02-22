@@ -13,13 +13,13 @@ db.exec(`
   );
 
   CREATE TABLE IF NOT EXISTS refreshToken(
-    userId INTEGER NOT NULL,
+    userId TEXT NOT NULL,
     tokenHash TEXT NOT NULL UNIQUE,
     jti TEXT NOT NULL,
-    expiretAt DATE NOT NULL,
+    expiresAt DATE NOT NULL,
     revokedAt DATE,
-    replaceBy TEXT,
-    createAt DATE DEFAULT CURRENT_TIMESTAMP,
+    replacedBy TEXT,
+    createdAt DATE DEFAULT CURRENT_TIMESTAMP,
     ip TEXT,
     userAgent TEXT,
 
