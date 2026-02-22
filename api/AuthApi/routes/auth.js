@@ -53,7 +53,9 @@ authRouter.post("/register", async (req, res) => {
     );
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Server error" });
+    res
+      .status(500)
+      .json(responseGenerator.generate({ message: "Server error" }));
   }
 });
 
@@ -99,22 +101,29 @@ authRouter.post("/login", async (req, res) => {
     );
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Server error" });
+    res
+      .status(500)
+      .json(responseGenerator.generate({ message: "Server error" }));
   }
 });
 
 authRouter.post("/refresh", async (req, res) => {
   try {
     const token = req.cookies?.refresh_token;
-    if (!token) return res.status(401).json({ message: "No refresh token" });
+    if (!token)
+      return res
+        .status(401)
+        .json(responseGenerator.generate({ message: "No refresh token" }));
 
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
     } catch (err) {
-      return res
-        .status(401)
-        .json({ message: "Invalid or expired refresh token" });
+      return res.status(401).json(
+        responseGenerator.generate({
+          message: "Invalid or expired refresh token",
+        }),
+      );
     }
 
     const tokenHash = hashToken(token);
@@ -144,13 +153,21 @@ authRouter.post("/refresh", async (req, res) => {
     };
 
     if (!doc) {
-      return res.status(401).json({ message: "Refresh token not recognized" });
+      return res.status(401).json(
+        responseGenerator.generate({
+          message: "Refresh token not recognized",
+        }),
+      );
     }
     if (doc.revokedAt) {
-      return res.status(401).json({ message: "Refresh token revoked" });
+      return res
+        .status(401)
+        .json(responseGenerator.generate({ message: "Refresh token revoked" }));
     }
     if (doc.expiresAt < new Date()) {
-      return res.status(401).json({ message: "Refresh token expired" });
+      return res
+        .status(401)
+        .json(responseGenerator.generate({ message: "Refresh token expired" }));
     }
 
     const result = await rotateRefreshToken(doc, doc.user, req, res);
@@ -162,7 +179,9 @@ authRouter.post("/refresh", async (req, res) => {
     );
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Server error" });
+    res
+      .status(500)
+      .json(responseGenerator.generate({ message: "Server error" }));
   }
 });
 

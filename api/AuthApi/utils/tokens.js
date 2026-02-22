@@ -4,8 +4,8 @@ import crypto from "crypto";
 import jwtRepository from "../repository/jwtRepository.js";
 import path from "path";
 
-const ACCESS_TTL = "5m";
-const REFRESH_TTL_SEC = 60 * 10; // 7 days
+const ACCESS_TTL = "2m";
+const REFRESH_TTL_SEC = 60 * 5; // 10 days
 // const REFRESH_TTL_SEC = 60 * 60 * 24 * 7; // 7 days
 
 export function hashToken(token) {
@@ -58,7 +58,6 @@ export function setRefreshCookie(res, refreshToken) {
 }
 
 export async function rotateRefreshToken(oldDoc, user, req, res) {
-  console.log("odl", oldDoc);
   oldDoc.revokedAt = new Date().toISOString();
   const newJti = createJti();
   oldDoc.replacedBy = newJti;
