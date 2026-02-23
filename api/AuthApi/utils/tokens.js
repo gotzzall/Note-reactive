@@ -4,9 +4,8 @@ import crypto from "crypto";
 import jwtRepository from "../repository/jwtRepository.js";
 import path from "path";
 
-const ACCESS_TTL = "1s";
-const REFRESH_TTL_SEC = 60 * 10; // 1 horas
-// const REFRESH_TTL_SEC = 60 * 60 * 24 * 7; // 7 days
+const ACCESS_TTL = "15m";
+const REFRESH_TTL_SEC = 60 * 60 * 24 * 7; // 7 days
 
 export function hashToken(token) {
   return crypto.createHash("sha256").update(token).digest("hex");

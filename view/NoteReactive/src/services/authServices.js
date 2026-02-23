@@ -15,6 +15,7 @@ export const authServices = {
     localStorage.removeItem("token");
 
     localStorage.setItem("token", JSON.stringify(result.result));
+    return result;
   },
   register: async (data) => {
     const response = await fetch(`${AUTH_URL}/register`, {

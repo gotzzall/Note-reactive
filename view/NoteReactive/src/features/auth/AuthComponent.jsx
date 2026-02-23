@@ -1,9 +1,21 @@
 import { useState } from "react";
 import { LoginComponent } from "./LoginComponent";
 import { RegisterComponent } from "./RegisterComponent";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
-export const AuthComponent = ({ data, actions, monitors }) => {
-  console.log("authComponent", actions);
+export const AuthComponent = ({ actions, monitors }) => {
+  let navigate = useNavigate();
+
+  console.log(monitors);
+
+  useEffect(() => {
+    if (monitors.login) {
+      navigate("/notes");
+    } else {
+      navigate("/auth");
+    }
+  }, [monitors]);
 
   const [isRegister, setIsRegister] = useState(false);
   return (
@@ -11,7 +23,10 @@ export const AuthComponent = ({ data, actions, monitors }) => {
       {isRegister ? (
         <RegisterComponent
           onLogin={() => setIsRegister(false)}
-          onSubmit={actions.auth.register}
+          onSubmit={(data) => {
+            actions.auth.register(data);
+            setIsRegister(false);
+          }}
         />
       ) : (
         <LoginComponent

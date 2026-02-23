@@ -1,4 +1,6 @@
-import { withAuth } from "../../hocs";
+import { withAuthReactive } from "../../hocs";
 import { NotesController } from "./NotesController";
 
-export const NotesView = withAuth(NotesController);
+export const NotesView = () => {
+  return <NotesController />;
+};

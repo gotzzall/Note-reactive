@@ -1,10 +1,8 @@
-import { withReactive } from "../../hocs";
+import { withAuthReactive } from "../../hocs";
 import { AuthComponent } from "./AuthComponent";
 
-export const AuthController = withReactive(AuthComponent, {
+export const AuthController = withAuthReactive(AuthComponent, {
   init: ({ actions }) => {},
-
   queries: () => [],
-
-  monitors: () => [],
+  monitors: () => ["login"],
 });
