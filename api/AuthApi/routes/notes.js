@@ -1,13 +1,16 @@
 import express from "express";
 import notesRepository from "../repository/notesRepository.js";
 import responseGenerator from "../tools/responseGenerator.js";
+import auth from "../middleware/auth.js";
 
 const notesRouter = express.Router();
 
-notesRouter.get("/notes", async (req, res) => {
+notesRouter.get("/notes", auth, async (req, res) => {
   try {
     const notes = await notesRepository.getNotes();
-    return res.status(200).json(notes);
+    return res
+      .status(200)
+      .json(responseGenerator.generate({ isSuccess: true, result: notes }));
   } catch (err) {
     console.log(err);
     return res.status(500).json(
@@ -33,7 +36,7 @@ notesRouter.get("/notes/:id", async (req, res) => {
   }
 });
 
-notesRouter.post("/notes", async (req, res) => {
+notesRouter.post("/notes", auth, async (req, res) => {
   try {
     const { notes } = req.body;
 
@@ -52,7 +55,9 @@ notesRouter.post("/notes", async (req, res) => {
         }),
       );
 
-    return res.status(200).json(newNote);
+    return res
+      .status(200)
+      .json(responseGenerator.generate({ isSuccess: true, result: newNote }));
   } catch (err) {
     console.log(err);
     return res.status(500).json(
@@ -90,7 +95,11 @@ notesRouter.put("/notes/:id", async (req, res) => {
 
     const noteUpdated = await notesRepository.getNoteById({ id });
 
-    return res.status(200).json(noteUpdated);
+    return res
+      .status(200)
+      .json(
+        responseGenerator.generate({ isSuccess: true, result: noteUpdated }),
+      );
   } catch (err) {
     return res.status(500).json(
       responseGenerator.generate({
@@ -125,7 +134,9 @@ notesRouter.delete("/notes/:id", async (req, res) => {
         }),
       );
 
-    return res.status(200).json({ id });
+    return res
+      .status(200)
+      .json(responseGenerator.generate({ isSuccess: true, result: id }));
   } catch (err) {
     return res.status(500).json(
       responseGenerator.generate({

@@ -1,33 +1,35 @@
-const NOTE_URL = "http://localhost:4042/api";
-const NOTE_PATH = "notes";
+const NOTE_API_URL = import.meta.env.VITE_NOTE_API_URL;
+import fetchWithAuth from "../tools/fetchWithAuth";
 
 export const notesService = {
   getNotes: async () => {
-    const response = await fetch(`${NOTE_URL}/${NOTE_PATH}`);
-    const data = await response.json();
-    return data;
+    const response = await fetchWithAuth(NOTE_API_URL, {
+      method: "GET",
+      credentials: "include",
+    });
+    return response;
   },
   addNote: async (note) => {
-    const response = await fetch(`${NOTE_URL}/${NOTE_PATH}`, {
+    const response = await fetchWithAuth(NOTE_API_URL, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(note),
     });
 
-    const data = await response.json();
-    return data;
+    return response;
   },
   deleteNote: async (id) => {
-    await fetch(`${NOTE_URL}/${NOTE_PATH}/${id}`, {
+    await fetchWithAuth(`${NOTE_API_URL}/${id}`, {
       method: "DELETE",
     });
 
     return id;
   },
   updateNote: async (note) => {
-    await fetch(`${NOTE_URL}/${NOTE_PATH}/${note.id}`, {
+    await fetchWithAuth(`${NOTE_API_URL}/${note.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

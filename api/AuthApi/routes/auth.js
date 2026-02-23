@@ -91,12 +91,12 @@ authRouter.post("/login", async (req, res) => {
       userAgent: req.headers["user-agent"] || "",
     });
 
-    setRefreshCookie(res, refreshToken);
+    // setRefreshCookie(res, refreshToken);
 
     return res.json(
       responseGenerator.generate({
         isSuccess: true,
-        result: accessToken,
+        result: { accessToken, refreshToken },
       }),
     );
   } catch (err) {
@@ -109,15 +109,16 @@ authRouter.post("/login", async (req, res) => {
 
 authRouter.post("/refresh", async (req, res) => {
   try {
-    const token = req.cookies?.refresh_token;
-    if (!token)
+    // const token = req.cookies?.refresh_token ;
+    const { refreshToken } = req.body || null;
+    if (!refreshToken)
       return res
         .status(401)
         .json(responseGenerator.generate({ message: "No refresh token" }));
 
     let decoded;
     try {
-      decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+      decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     } catch (err) {
       return res.status(401).json(
         responseGenerator.generate({
@@ -126,7 +127,7 @@ authRouter.post("/refresh", async (req, res) => {
       );
     }
 
-    const tokenHash = hashToken(token);
+    const tokenHash = hashToken(refreshToken);
     const refreshTokenFinded = await jwtRepository.findOneJwt({
       tokenHash,
       jti: decoded.jti,
@@ -174,7 +175,7 @@ authRouter.post("/refresh", async (req, res) => {
     return res.json(
       responseGenerator.generate({
         isSuccess: true,
-        result: result.accessToken,
+        result: result,
       }),
     );
   } catch (err) {

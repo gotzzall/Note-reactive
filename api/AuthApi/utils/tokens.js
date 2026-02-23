@@ -4,8 +4,8 @@ import crypto from "crypto";
 import jwtRepository from "../repository/jwtRepository.js";
 import path from "path";
 
-const ACCESS_TTL = "2m";
-const REFRESH_TTL_SEC = 60 * 5; // 10 days
+const ACCESS_TTL = "1s";
+const REFRESH_TTL_SEC = 60 * 10; // 1 horas
 // const REFRESH_TTL_SEC = 60 * 60 * 24 * 7; // 7 days
 
 export function hashToken(token) {
@@ -54,6 +54,8 @@ export function setRefreshCookie(res, refreshToken) {
     httpOnly: true,
     path: "/api/auth/refresh",
     maxAge: REFRESH_TTL_SEC * 1000,
+    sameSite: "none",
+    secure: false,
   });
 }
 
@@ -75,5 +77,5 @@ export async function rotateRefreshToken(oldDoc, user, req, res) {
   });
 
   setRefreshCookie(res, newRefresh);
-  return { accessToken: newAccess };
+  return { accessToken: newAccess, refreshToken: newRefresh };
 }

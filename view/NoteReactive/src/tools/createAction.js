@@ -23,7 +23,6 @@ const localDbActions = {
         const collection = JSON.parse(localStorage.getItem(collectionName));
         const index = collection.findIndex((item) => item.id == note.id);
         collection[index] = { ...collection[index], notes: note.notes };
-        console.log("collection", collection);
         localStorage.setItem(collectionName, JSON.stringify(collection));
         window.dispatchEvent(new Event("storage"));
       },
