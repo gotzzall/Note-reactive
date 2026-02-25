@@ -9,13 +9,11 @@ export const useAuthMonitors = (initValue = {}, options) => {
   }
   */
   const [monitors, setMonitors] = useState(initValue);
-  console.log("monitors", monitors);
 
   useEffect(() => {
     const monitor = options.monitors();
 
     const handleOnAuth = (event) => {
-      console.log(event);
       setMonitors((prev) => ({
         ...prev,
         [event.detail.action]: event.detail.value,

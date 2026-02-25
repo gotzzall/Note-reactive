@@ -10,12 +10,7 @@ export const authServices = {
       body: JSON.stringify(data),
     });
 
-    const result = await response.json();
-
-    localStorage.removeItem("token");
-
-    localStorage.setItem("token", JSON.stringify(result.result));
-    return result;
+    return await response.json();
   },
   register: async (data) => {
     const response = await fetch(`${AUTH_URL}/register`, {
@@ -26,9 +21,7 @@ export const authServices = {
       body: JSON.stringify(data),
     });
 
-    const result = await response.json();
-
-    console.log("register:result", result);
+    return await response.json();
   },
   refresh: async () => {
     const refresh = JSON.parse(localStorage.getItem("token"));

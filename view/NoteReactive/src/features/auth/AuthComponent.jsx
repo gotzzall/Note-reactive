@@ -7,8 +7,6 @@ import { useNavigate } from "react-router";
 export const AuthComponent = ({ actions, monitors }) => {
   let navigate = useNavigate();
 
-  console.log(monitors);
-
   useEffect(() => {
     if (monitors.login) {
       navigate("/notes");

@@ -74,6 +74,7 @@ export const RegisterForm = ({
         </label>
         <button
           className="btn join-item"
+          type="button"
           onClick={() => setShowPassword((value) => !value)}
         >
           {showPassword ? (
