@@ -1,6 +1,6 @@
 import Database from "better-sqlite3";
 
-const notesDb = new Database("notesDb.db");
+export const notesDb = new Database("notesDb.db");
 
 notesDb.exec(`
   CREATE TABLE IF NOT EXISTS notes (
@@ -9,5 +9,3 @@ notesDb.exec(`
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
   );
 `);
-
-export default notesDb;

@@ -1,4 +1,4 @@
-import notesDb from "../config/notesDb.js";
+import { notesDb } from "../config/index.js";
 
 const notesRepository = {
   getNotes: async () => {

@@ -7,13 +7,17 @@ import profilesRouter from "./routes/profiles.js";
 import cookieParser from "cookie-parser";
 import notesRouter from "./routes/notes.js";
 import cors from "cors";
+import {
+  contactsRouter,
+  parentsRouter,
+  relationshipTypesRouter,
+  studentsRouter,
+} from "./routes/index.js";
 
 const app = express();
 
 app.use(cookieParser());
-
 app.use(express.json());
-
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -23,10 +27,14 @@ app.use(
 );
 
 app.use("/api/auth", authRouter);
-
 app.use("/api/profile", profilesRouter);
-
 app.use("/api", notesRouter);
+
+app.use("/auth", authRouter);
+app.use("/", studentsRouter);
+app.use("/", contactsRouter);
+app.use("/", relationshipTypesRouter);
+app.use("/", parentsRouter);
 
 app.get("/", (req, res) => {
   return res.send("hello");

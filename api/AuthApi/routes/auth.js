@@ -61,9 +61,10 @@ authRouter.post("/register", async (req, res) => {
 
 authRouter.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    console.log(req.body);
+    const { username, password } = req.body;
 
-    const user = await userRespository.getOneUserByEmail({ email });
+    const user = await userRespository.getOneUserByEmail({ email: username });
     if (!user)
       return res.status(400).json({
         isSuccess: false,
@@ -93,12 +94,13 @@ authRouter.post("/login", async (req, res) => {
 
     // setRefreshCookie(res, refreshToken);
 
-    return res.json(
-      responseGenerator.generate({
-        isSuccess: true,
-        result: { accessToken, refreshToken },
-      }),
-    );
+    // return res.json(
+    //   responseGenerator.generate({
+    //     isSuccess: true,
+    //     result: { accessToken, refreshToken },
+    //   }),
+    // );
+    return res.json({ accessToken, refreshToken });
   } catch (err) {
     console.log(err);
     res
@@ -172,12 +174,14 @@ authRouter.post("/refresh", async (req, res) => {
     }
 
     const result = await rotateRefreshToken(doc, doc.user, req, res);
-    return res.json(
-      responseGenerator.generate({
-        isSuccess: true,
-        result: result,
-      }),
-    );
+    // return res.json(
+    //   responseGenerator.generate({
+    //     isSuccess: true,
+    //     result: result,
+    //   }),
+    // );
+
+    return res.json(result);
   } catch (err) {
     console.log(err);
     res
